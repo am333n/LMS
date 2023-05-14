@@ -1,0 +1,53 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#</head>#}
+{% extends "base2.html" %}
+{% block body %}
+
+{#<center>#}
+<form action="/filterby" method="post" enctype="multipart/form-data">
+    {% block title %}View Leave{% endblock %}
+<table >
+    <tr>
+        <td>Filter By</td>
+        <td><select name="filter"id="filter">
+            <option disabled selected hidden>Select a Dept</option>
+            <option value="computer">computer</option>
+            <option value="sales">sales</option>
+        </select></td>
+        <td><input type="submit" ></td>
+    </tr>
+</table>
+</form>
+    <table border="1">
+        <tr>
+            <td>sl.no</td>
+            <td>foto</td>
+            <td>Employee Name</td>
+            <td>Annual Leave</td>
+            <td>Remaining</td>
+            <td>Medical</td>
+            <td>Remaining</td>
+            <td>Emergency</td>
+            <td>Remaining</td>
+        </tr>{% for i in data %}
+        <tr>
+
+             <td>&nbsp;{{ loop.index }}</td>
+           <td><img src="{{ i['photo'] }}" height="50px" width="50px"></td>
+            <td>{{ i['name'] }}</td>
+            <td>{{ i['normal'] }}</td>
+             <td>{{ i['ntaken'] }}</td>
+            <td>{{ i['medical'] }}</td>
+            <td>{{ i['mtaken'] }}</td>
+            <td>{{ i['emergency'] }}</td>
+            <td>{{ i['etaken'] }}</td>
+             {% endfor %}
+        </tr>
+    </table>
+{#</center>#}
+{% endblock %}
+{#</html>#}

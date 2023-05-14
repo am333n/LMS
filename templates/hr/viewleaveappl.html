@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center>
+    <h3>Leave Requests</h3>
+<form action="/filterrequest" method="post" enctype="multipart/form-data">
+<table>
+    <tr>
+        <td>Filter By</td>
+        <td><select name="filter"id="filter">
+            <option disabled selected hidden value=" ">Choose an Option</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+        </select></td>
+        <td><input type="submit" ></td>
+    </tr>
+</table>
+</form>
+<br>
+<br>
+
+<table border="1">
+        <tr>
+            <td>sl.no</td>
+            <td>foto</td>
+            <td>Employee Name</td>
+            <td>Department</td>
+            <td>Post</td>
+            <td>Date From</td>
+            <td>Date To</td>
+            <td>Type</td>
+            <td>Reason</td>
+            <td>Status</td>
+        </tr>{% for i in data %}
+        <tr>
+
+             <td>&nbsp;{{ loop.index }}</td>
+           <td><img src="{{ i['photo'] }}" height="50px" width="50px"></td>
+            <td>{{ i['name'] }}</td>
+            <td>{{ i['dept'] }}</td>
+             <td>{{ i['post'] }}</td>
+            <td>{{ i['datefrom'] }}</td>
+            <td>{{ i['dateto'] }}</td>
+            <td>{{ i['type'] }}</td>
+            <td>{{ i['reason'] }}</td>
+            <td>{{ i['leavestatus'] }}</td>
+            <td><a href="/totleavemp/{{ i['empid'] }}">View No. of Leave</a></td>
+            <td><a href="/acceptappl/{{ i['empid'] }}" onclick="doAction('accept','Are you sure ?');">Accept</a></td>
+            <td><a href="/rejectappl/{{ i['empid'] }}" onclick="doAction('reject','Are sure to Reject the request')">Reject</a></td>
+             {% endfor %}
+        </tr>
+    </table>
+</center>
+<script>
+    function doAction(action,message){
+        if(confirm(message)){
+            console.log(action +'is confirmed');
+        }
+        else{
+            console.log(action + 'is cancelled')
+            event.preventDefault()
+        }
+    }
+</script>
+</body>
+</html>

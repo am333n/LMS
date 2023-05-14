@@ -1,0 +1,110 @@
+{% extends "base3.html" %}
+{% block body %}
+    <body >
+    <section class="section">
+      <div class="row">
+        <div class="">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Leave Request Form</h5>
+ <form action="/applyleave_post" method="post" enctype="multipart/form-data">
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Leave Type</label>
+                  <div class="col-sm-10">
+                    <select class="form-select" aria-label="Default select example" name="type" id="type">
+                      <option selected disabled hidden>select leave type</option>
+                        <option value="normal">Annual Leave</option>
+                      <option value="medical">Medical Leave</option>
+                      <option value="emergency">Emergency Leave</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="inputDate" class="col-sm-2 col-form-label" >Date From</label>
+                  <div class="col-sm-10">
+                    <input type="date" class="form-control"id="date1" name="date1">
+                  </div>
+                </div>
+
+
+                <div class="row mb-3">
+                  <label for="inputDate" class="col-sm-2 col-form-label" >Date To</label>
+                  <div class="col-sm-10">
+                    <input type="date" class="form-control" id="date2" name="date2">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="inputText" class="col-sm-2 col-form-label">Number of days</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" name="days" id="days" value="">
+{#                      <button onclick="days()">press</button>#}
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="inputPassword" class="col-sm-2 col-form-label" >Reason</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" style="height: 100px" name="rsn" id="rsn"></textarea>
+                  </div>
+                </div>
+
+
+
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Submit Button</label>
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary" ">Submit Form</button>
+                  </div>
+                </div>
+                    <input type="hidden" value="{{ data['empid'] }}" id="empid" name="empid">
+                    <input type="hidden" value="{{ data['leaveid'] }}"id="leaveid" name="leaveid">
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    </body>
+{#    <script>#}
+{#    function validate() {#}
+{##}
+{##}
+{#    if({{ data['normal'] }}=0) {#}
+{#        alert('your Annual Leave Maxed Out')#}
+{#    else#}
+{#        if ({{ data['medical'] }} = 0) {#}
+{#            alert('your Medical Leave Maxed Out')#}
+{#        else#}
+{#            if ({{ data['emergency'] }} = 0) {#}
+{#                alert('your Emergency Leave Maxed Out')#}
+{#            else#}
+{#                confirm('are you sure to submit the form?')#}
+{#            }#}
+{#        }#}
+{#    }#}
+{##}
+{#    </script>#}
+{#    <script>#}
+{##}
+{##}
+{#        function days()#}
+{#        {#}
+{#            var date1=document.getElementById('date1').value#}
+{#            var date2=document.getElementById('date2').value#}
+{##}
+{#            var dat1=new Date(date1)#}
+{#            var dat2=new Date(date2)#}
+{#            dat1.getTime()#}
+{#            dat2.getTime()#}
+{##}
+{#            var difftime=dat2-dat1#}
+{#            var diffday=difftime/(1000*3600*24)#}
+{#            alert(dat1)#}
+{##}
+{#    </script>#}
+
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center>
+    <form action="/addleave_post" method="post" enctype="multipart/form-data">
+        <table border="1" cellpadding="10">
+            <tr>
+                <td colspan="2" align="center"><img src="{{ data['photo'] }}" height="50px" width="50px"></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">{{ data['name'] }}</td>
+            </tr>
+             <tr>
+                <td>Department</td>
+                <td>{{ data['dept'] }}</td>
+            </tr>
+             <tr>
+                <td>post</td>
+                <td>{{ data['post'] }}</td>
+            </tr>
+             <tr>
+                <td>Annual Leave</td>
+                <td><input type="number" min="1" max="365" required name="annual" id="annual"></td>
+            </tr>
+             <tr>
+                <td>Emergency Leave</td>
+                <td><input type="number" min="1" max="365" required name="emer" id="emer"></td>
+            </tr>
+             <tr>
+                <td>Medical Leave</td>
+                <td><input type="number" min="1" max="365" required name="medical" id="medical"> </td>
+            </tr>
+             <tr>
+                <td colspan="2" align="center"><input type="submit"> </td>
+            </tr>
+            <input type="hidden" name="empid" id="empid" value="{{ data['empid'] }}">
+            <input type="hidden" name="loginid" id="loginid" value="{{ data['loginid'] }}">
+
+        </table>
+    </form>
+</center>
+
+</body>
+</html>
