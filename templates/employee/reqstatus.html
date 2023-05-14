@@ -1,4 +1,4 @@
-{% extends "base2.html" %}
+{% extends "base3.html" %}
 {% block body %}
  <section class="section">
       <div class="row">
@@ -11,15 +11,12 @@
                 <thead>
                   <tr>
                     <th scope="col">sl.no</th>
-                    <th scope="col">Photo</th>
-                    <th scope="col">Employee Name</th>
-                    <th scope="col">Department</th>
-                    <th scope="col">Post</th>
                        <th scope="col">Date From</th>
                        <th scope="col">Date to</th>
                       <th scope="col">No. of Days</th>
                        <th scope="col">Type</th>
                       <th scope="col">Reason</th>
+                      <th scope="col">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -27,19 +24,12 @@
         <tr>
 
              <td>&nbsp;{{ loop.index }}</td>
-           <td><img src="{{ i['photo'] }}" height="50px" width="50px"></td>
-            <td>{{ i['name'] }}</td>
-            <td>{{ i['dept'] }}</td>
-             <td>{{ i['post'] }}</td>
             <td>{{ i['datefrom'] }}</td>
             <td>{{ i['dateto'] }}</td>
             <td>{{ i['days'] }}</td>
             <td>{{ i['type'] }}</td>
             <td>{{ i['reason'] }}</td>
             <td>{{ i['leavestatus'] }}</td>
-            <td><a href="/viewleavemn/{{ i['empid'] }}">View No. of Leave</a></td>
-            <td><a href="/acceptappl2/{{ i['requestid'] }}" onclick="doAction('accept','Are you sure ?');">Accept</a></td>
-            <td><a href="/rejectappl2/{{ i['requestid'] }}" onclick="doAction('reject','Are sure to Reject the request')">Reject</a></td>
              {% endfor %}
         </tr>
     </table>

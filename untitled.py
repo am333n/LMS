@@ -2,7 +2,14 @@ from flask import *
 from DBConnection import *
 app = Flask(__name__)
 app.secret_key="abcd"
-static_path="C:\\Users\\hp\\PycharmProjects\\untitled\\static"
+import getpass
+import os
+username = getpass.getuser()
+static_path = os.path.join("C:\\", "Users", username, "PycharmProjects", "LMS1", "static")
+
+if not os.path.exists(static_path):
+    os.makedirs(static_path)
+from datetime import datetime, timedelta
 
 @app.route('/')
 def login():
@@ -65,7 +72,8 @@ def empsignup_post():
     photo = request.files['foto']
     from datetime import datetime
     date = datetime.now().strftime("%Y%m%d-%H%M%S")
-    photo.save(r"C:\\Users\\hp\\PycharmProjects\\untitled\\static\\employee\\" + date + ".jpg")
+    username = getpass.getuser()
+    photo.save(os.path.join(static_path, "employee", f"{date}.jpg"))
     path = "/static/employee/" + date + ".jpg"
     db=Db()
     username = request.form['username']
@@ -198,6 +206,39 @@ def filterrequest():
     qry="SELECT *  FROM `request` INNER JOIN `employee` ON `request`.`empid`= `employee`.`empid` WHERE `leavestatus` LIKE '"+status+"'"
     res=db.select(qry)
     return render_template('hr/viewleaveappl.html',data=res)
+
+@app.route('/viewmansignup')
+def viewmansignup():
+    db=Db()
+    qry="SELECT * FROM `manager` WHERE `manstatus`='pending'"
+    rees=db.select(qry)
+    return render_template('hr/viewmansignup.html',data=rees)
+@app.route('/manaccept/<id>')
+def manaccept(id):
+    db=Db()
+    qry="UPDATE `manager` SET `manstatus`='accepted' WHERE `manid`='"+id+"'"
+    res=db.update(qry)
+    return redirect('/viewmansignup')
+@app.route('/manreject/<id>')
+def manreject(id):
+    db=Db()
+    qry="UPDATE `manager` SET `manstatus`='rejected' WHERE `manid`='"+id+"'"
+    res=db.update(qry)
+    return redirect ('/viewmansignup')
+
+@app.route('/viewrejman')
+def viewrejman():
+    db = Db()
+    qry = "SELECT * FROM `manager` WHERE `manstatus`='rejected'"
+    rees = db.select(qry)
+    return render_template('hr/manrejected.html',data=rees)
+
+@app.route('/deleteman/<id>')
+def deleteman(id):
+    db = Db()
+    qry = "DELETE FROM `manager`WHERE `manid`='" + id + "'"
+    res = db.update(qry)
+    return redirect('/viewrejman')
 #manager=================================================================
 
 @app.route('/mngrhome')
@@ -214,7 +255,8 @@ def mansignup_post():
     photo = request.files['foto']
     from datetime import datetime
     date = datetime.now().strftime("%Y%m%d-%H%M%S")
-    photo.save(r"C:\\Users\\hp\\PycharmProjects\\untitled\\static\\employee\\" + date + ".jpg")
+    pcusername = getpass.getuser()
+    photo.save(os.path.join(static_path, "manager", f"{date}.jpg"))
     path = "/static/employee/" + date + ".jpg"
     db=Db()
     username = request.form['username']
@@ -238,33 +280,44 @@ def leavereq():
 
 @app.route('/acceptappl2/<id>')
 def acceptappl2(id):
-    db=Db()
-    # qry="UPDATE `request` SET `leavestatus`='accepted' WHERE `requestid`='"+id+"'"
-    # res=db.update(qry)
-    qry2 = "SELECT *  FROM `request` WHERE `leavestatus`='pending' AND `requestid`='"+id+"'"
-    res2= db.select(qry2)
+    cnx = mysql.connector.connect(host="localhost", user="root", password="", database="hr")
+    cur = cnx.cursor(dictionary=True)
+
+    qry1 = "UPDATE `request` SET `leavestatus`='accepted' WHERE `requestid`=%s"
+    cur.execute(qry1, (id,))
+    cnx.commit()
+
+    qry2 = "SELECT * FROM `request` INNER JOIN `leave`  ON `request`.`empid` = `leave`.`empid` WHERE requestid=%s AND leavestatus='pending'"
+    cur.execute(qry2, (id,))
+    res2 = cur.fetchone()
+
     if res2 is not None:
-        if res2['type']=="normal":
-            qry3="UPDATE `leave` SET `ntaken`=`ntaken`+ res2['days'] WHERE `leaveid`=res2['leaveid']"
-            res3=db.update(qry3)
-            return '''<script>alert('annual leave updated');window.location='/leavereq'</script>'''
-        elif res2['type']=="medical":
-            qry3 = "UPDATE `leave` SET `mtaken`=`mtaken`+ res2['days']  WHERE `leaveid`=res2['leaveid']"
-            res3 = db.update(qry3)
-            return '''<script>alert('medical leave updated');window.location='/leavereq'</script>'''
-        elif res2['type']=="emergency":
-            qry3 = "UPDATE `leave` SET `etaken`=`etaken`+ res2['days'] WHERE `leaveid`=res2['leaveid']"
-            res3 = db.update(qry3)
-            return '''<script>alert('emergency leave updated');window.location='/leavereq'</script>'''
+        leave_id = res2['leaveid']
+        days = res2['days']
+        leave_type = res2['type']
+
+        if leave_type == "normal":
+            qry3 = "UPDATE `leave` SET `ntaken`=`ntaken`+ %s WHERE `leaveid`=%s"
+        elif leave_type == "medical":
+            qry3 = "UPDATE `leave` SET `mtaken`=`mtaken`+ %s WHERE `leaveid`=%s"
+        elif leave_type == "emergency":
+            qry3 = "UPDATE `leave` SET `etaken`=`etaken`+ %s WHERE `leaveid`=%s"
         else:
-            return'''<script>alert('Leave Not Updated');window.location='/'</script>'''
+            return '''<script>alert('Invalid Leave Type');window.location='/leavereq'</script>'''
+
+        cur.execute(qry3, (days, leave_id,))
+        cnx.commit()
+
+        return '''<script>alert('Leave updated');window.location='/leavereq'</script>'''
+    else:
+        return '''<script>alert('Leave Not Updated');window.location='/leavereq'</script>'''
 
 
-    return redirect('/leavereq')
+
 @app.route('/rejectappl2/<id>')
 def rejectappl2(id):
     db=Db()
-    qry="UPDATE `request` SET `leavestatus`='rejected' WHERE `empid`='"+id+"'"
+    qry="UPDATE `request` SET `leavestatus`='rejected' WHERE `requestid`='"+id+"'"
     res=db.update(qry)
     return redirect('/leavereq')
 
@@ -290,7 +343,7 @@ def editprofile():
     photo=request.files['foto']
     from datetime import datetime
     date=datetime.now().strftime("%Y%m%d-%H%M%S")
-    photo.save(r"C:\\Users\\hp\\PycharmProjects\\untitled\\static\\employee\\" + date + ".jpg")
+    photo.save(os.path.join(static_path, "manager", f"{date}.jpg"))
     path="/static/employee/" + date + ".jpg"
 
     db=Db()
@@ -303,7 +356,68 @@ def viewleavemn(id):
     db=Db()
     qry="SELECT * FROM `leave` INNER JOIN `employee` ON `leave`.`empid`=`employee`.`empid` WHERE `leave`.`empid`='"+id+"' "
     res=db.selectOne(qry)
-    return render_template('manager/viewleavemn.html',data=res)
+    return render_template('manager/empleave.html',data=res)
+
+@app.route('/leaverejected')
+def leaverejected():
+    db = Db()
+    qry = "SELECT *  FROM `request` INNER JOIN `employee` ON `request`.`loginid`=`employee`.`loginid` WHERE `leavestatus`='rejected'"
+    res = db.select(qry)
+    return render_template('manager/leaverejected.html', data=res)
+
+@app.route('/manviewleave')
+def manviewleave():
+    db = Db()
+    qry = "SELECT * FROM `leave` INNER JOIN `employee` ON `leave`.`empid`=`employee`.`empid` "
+    res = db.select(qry)
+    return render_template('manager/manviewleave.html')
+
+@app.route('/monthreport')
+def monthreport():
+    now = datetime.now()
+    month = now.month
+    year = now.year
+    db = Db()
+    qry = "SELECT * FROM `request` INNER JOIN `employee` ON `request`.`empid`=`employee`.`empid` WHERE `leavestatus`='accepted' AND MONTH(`datefrom`)='"+str(month)+"' AND YEAR(`datefrom`)='"+str(year)+"'"
+    res = db.select(qry)
+    return render_template('manager/month reeport.html', data=res, month=month, year=year)
+
+
+@app.route('/report_post',methods=['post'])
+def report_post():
+    month =request.form['month']
+    year = request.form['year']
+
+    db = Db()
+    qry = "SELECT * FROM `request` INNER JOIN `employee` ON `request`.`empid`=`employee`.`empid` WHERE `leavestatus`='accepted' AND MONTH(`datefrom`)='"+month+"' AND YEAR(`datefrom`)='"+year+"'"
+    res = db.select(qry)
+
+    return render_template('manager/month reeport.html', data=res, month=month, year=year)
+import csv
+import io
+from flask import Response
+
+
+@app.route('/download-report', methods=['GET'])
+def download_report():
+    month = int(request.args.get('month'))
+    year = int(request.args.get('year'))
+
+    start_date = datetime(year, month, 1).strftime('%Y-%m-%d')
+    end_date = (datetime(year, month + 1, 1) - timedelta(days=1)).strftime('%Y-%m-%d')
+    db = Db()
+    qry = "SELECT employee.name, employee.dept, employee.post, request.datefrom, request.dateto, request.days FROM `request` INNER JOIN `employee` ON `request`.`empid`=`employee`.`empid` WHERE `leavestatus`='accepted' AND MONTH(`datefrom`)='" + str(month) + "' AND YEAR(`datefrom`)='" + str(year) + "'"
+    res = db.select(qry)
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Name', 'Department', 'Post', 'Date From', 'Date To', 'Days Taken'])
+    for row in res:
+        writer.writerow([row['name'], row['dept'], row['post'], row['datefrom'], row['dateto'], row['days']])
+
+    output.seek(0)
+    return Response(output, mimetype='text/csv', headers={'Content-Disposition': 'attachment; filename=monthly_report.csv'})
+
 
 
 #employee====================================================================
@@ -349,6 +463,35 @@ def applyleave_post():
             qry2="INSERT INTO `request` (`empid`,`loginid`,`leaveid`,`type`,`leavestatus`,`datefrom`,`dateto`,`reason`,`days`) VALUES ('"+leaveid+"','"+str(session['lid'])+"','"+leaveid+"','"+type+"','pending','"+datefrom+"','"+dateto+"','"+reason+"','"+days+"')"
             res=db.insert(qry2)
             return '''<script>alert('Your Request  successfully forwarded');window.location='/emphome'</script>'''
+
+@app.route('/viewempprofile')
+def viewempprofile():
+    db=Db()
+    qry="SELECT * FROM `employee` WHERE `loginid`='"+str(session['lid'])+"'"
+    res=db.selectOne(qry)
+    return render_template('employee/viewempProfile.html', data=res)
+
+@app.route('/editempprofile',methods=['post'])
+def editempprofile():
+    name=request.form['fullname']
+    birth=request.form['dob']
+    address=request.form['address']
+    photo=request.files['foto']
+    from datetime import datetime
+    date=datetime.now().strftime("%Y%m%d-%H%M%S")
+    photo.save(os.path.join(static_path, "employee", f"{date}.jpg"))
+    path="/static/employee/" + date + ".jpg"
+    db=Db()
+    qry="UPDATE `employee` SET `name`='"+name+"',`address`='"+address+"',`photo`='"+path+"',`dob`='"+birth+"' WHERE `loginid`='"+str(session['lid'])+"'"
+    res=db.update(qry)
+    return redirect('/viewempprofile')
+
+@app.route('/empstatus')
+def empstatus():
+    db=Db()
+    qry="SELECT *  FROM `request` INNER JOIN `employee` ON `request`.`loginid`=`employee`.`loginid` WHERE `request`.`loginid`='"+str(session['lid'])+"'"
+    res=db.select(qry)
+    return render_template('employee/reqstatus.html',data=res)
 
 
 if __name__ == '__main__':

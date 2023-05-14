@@ -6,7 +6,7 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Leave Requests</h5>
+              <h5 class="card-title">Rejected Request</h5>
               <table class="table datatable">
                 <thead>
                   <tr>
@@ -38,8 +38,6 @@
             <td>{{ i['reason'] }}</td>
             <td>{{ i['leavestatus'] }}</td>
             <td><a href="/viewleavemn/{{ i['empid'] }}">View No. of Leave</a></td>
-            <td><a href="/acceptappl2/{{ i['requestid'] }}" onclick="doAction('accept','Are you sure ?');">Accept</a></td>
-            <td><a href="/rejectappl2/{{ i['requestid'] }}" onclick="doAction('reject','Are sure to Reject the request')">Reject</a></td>
              {% endfor %}
         </tr>
     </table>

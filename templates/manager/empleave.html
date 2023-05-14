@@ -1,6 +1,7 @@
 {% extends "base2.html" %}
 {% block body %}
-  <section class="section profile">
+    <body onload="thing()">
+    <section class="section profile">
       <div class="row">
         <div class="col-xl-4">
 
@@ -111,4 +112,21 @@
       </div>
     </section>
     </body>
+    <script>
+    function thing() {
+        var annual = parseInt(document.getElementById('normal').value)
+        var ntaken = parseInt(document.getElementById('ntaken').value)
+        var nrem=annual-ntaken
+        document.getElementById("nrem").value=nrem
+        var medical = parseInt(document.getElementById('medical').value)
+        var mtaken = parseInt(document.getElementById('mtaken').value)
+        var nmrem=medical-mtaken
+        document.getElementById("mrem").value=nmrem
+        var emergency = parseInt(document.getElementById('emergency').value)
+        var etaken = parseInt(document.getElementById('etaken').value)
+        var erem=emergency-etaken
+        document.getElementById("erem").value=erem
+
+    }
+    </script>
 {% endblock %}

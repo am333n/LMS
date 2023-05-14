@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block body %}
-<body>
-<h1>Welcome HR</h1>
-<a href="/viewsignup">View Signups</a><br>
-<a href="/manageemp">Manage Employees</a><br>
-<a href="/viewleave">View Leave</a><br>
-<a href="/viewleaveappl">View Leave Application</a><br>
-</body>
+    <main>
+    <div class="container">
+
+      <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <h1>Welcome</h1>
+        <img src="static/assets/homeimg/hr.svg" class="img-fluid py-5" alt="Page Not Found">
+      </section>
+
+    </div>
+  </main>
 {% endblock %}

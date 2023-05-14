@@ -1,0 +1,121 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#</head>#}
+{% extends "base2.html" %}
+{% block body %}
+
+{#<center>#}
+{#<form action="/filterby" method="post" enctype="multipart/form-data">#}
+{#    {% block title %}View Leave{% endblock %}#}
+{#<table >#}
+{#    <tr>#}
+{#        <td>Filter By</td>#}
+{#        <td><select name="filter"id="filter">#}
+{#            <option disabled selected hidden>Select a Dept</option>#}
+{#            <option value="computer">computer</option>#}
+{#            <option value="sales">sales</option>#}
+{#        </select></td>#}
+{#        <td><input type="submit" ></td>#}
+{#    </tr>#}
+{#</table>#}
+<div class="container">
+    <h2>Monthly Leave Report</h2>
+    <form action="/report_post" method="post">
+        <div class="form-group row">
+            <label for="month" class="col-sm-2 col-form-label">Month:</label>
+            <div class="col-sm-4">
+                <select class="form-control" id="month" name="month">
+                    <option value="1" {% if month == 1 %} selected {% endif %}>January</option>
+                    <option value="2" {% if month == 2 %} selected {% endif %}>February</option>
+                    <option value="3" {% if month == 3 %} selected {% endif %}>March</option>
+                    <option value="4" {% if month == 4 %} selected {% endif %}>April</option>
+                    <option value="5" {% if month == 5 %} selected {% endif %}>May</option>
+                    <option value="6" {% if month == 6 %} selected {% endif %}>June</option>
+                    <option value="7" {% if month == 7 %} selected {% endif %}>July</option>
+                    <option value="8" {% if month == 8 %} selected {% endif %}>August</option>
+                    <option value="9" {% if month == 9 %} selected {% endif %}>September</option>
+                    <option value="10" {% if month == 10 %} selected {% endif %}>October</option>
+                    <option value="11" {% if month == 11 %} selected {% endif %}>November</option>
+                    <option value="12" {% if month == 12 %} selected {% endif %}>December</option>
+                </select>
+            </div>
+            <label for="year" class="col-sm-2 col-form-label">Year:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="year" name="year" value="{{ year }}">
+            </div>
+        <br>
+        <br>
+
+        </div>
+        <div class="form-group row" align="left">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-primary" >Submit</button>
+                <div align="right"><a href="{{ url_for('download_report', month=month, year=year) }}" class="btn btn-success" ><i class="bi bi-folder">    Download Report</i></a></div>
+            </div>
+
+
+            <br>
+            <br>
+            <br>
+
+
+
+
+
+<section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Employee List</h5>
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">sl.no</th>
+                    <th scope="col">Photo</th>
+                    <th scope="col">Employee Name</th>
+                    <th scope="col">Annual Leave</th>
+                    <th scope="col">Remaining</th>
+                       <th scope="col">Medical</th>
+                      <th scope="col">Remaining</th>
+                      <th scope="col">Emergency</th>
+                      <th scope="col">Remaining</th>
+{#                      <th scope="col">Reject</th>#}
+                  </tr>
+                </thead>
+                <tbody>
+
+</form>
+{#    <table border="1">#}
+{#        <tr>#}
+{#            <td>sl.no</td>#}
+{#            <td>foto</td>#}
+{#            <td>Employee Name</td>#}
+{#            <td>Annual Leave</td>#}
+{#            <td>Remaining</td>#}
+{#            <td>Medical</td>#}
+{#            <td>Remaining</td>#}
+{#            <td>Emergency</td>#}
+{#            <td>Remaining</td>#}
+        </tr>{% for i in data %}
+        <tr>
+
+             <td>&nbsp;{{ loop.index }}</td>
+           <td><img src="{{ i['photo'] }}" height="50px" width="50px"></td>
+            <td>{{ i['name'] }}</td>
+            <td>{{ i['dept'] }}</td>
+             <td>{{ i['post'] }}</td>
+            <td>{{ i['datefrom'] }}</td>
+            <td>{{ i['dateto'] }}</td>
+            <td>{{ i['days'] }}</td>
+            <td>{{ i['type'] }}</td>
+             {% endfor %}
+        </tr>
+    </table>
+{#</center>#}
+{% endblock %}
+{#</html>#}
