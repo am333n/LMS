@@ -80,7 +80,7 @@ CREATE TABLE `login` (
 
 insert  into `login`(`loginid`,`username`,`password`,`type`) values 
 (6,'hr','hr','hr'),
-(7,'emp2','emp2','employee'),
+(7,'admin','admin','hr'),
 (10,'emp4','emp4','employee'),
 (11,'man1','MAN1','manager'),
 (13,'emp1','emp1','employee');
@@ -104,9 +104,6 @@ CREATE TABLE `manager` (
 
 /*Data for the table `manager` */
 
-insert  into `manager`(`manid`,`loginid`,`name`,`department`,`post`,`address`,`photo`,`dob`,`manstatus`) values 
-(3,12,'emp1','Sales','salesman','abcdef','/static/employee/20230510-131322.jpg','2023-05-22','pending');
-
 /*Table structure for table `request` */
 
 DROP TABLE IF EXISTS `request`;
@@ -123,13 +120,14 @@ CREATE TABLE `request` (
   `reason` varchar(100) DEFAULT NULL,
   `days` int(100) DEFAULT NULL,
   KEY `requestid` (`requestid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Data for the table `request` */
 
 insert  into `request`(`empid`,`loginid`,`leaveid`,`requestid`,`type`,`leavestatus`,`datefrom`,`dateto`,`reason`,`days`) values 
 (1,10,2,1,'emergency','accepted','2023-05-10','2023-05-15','operation',5),
-(3,13,3,3,'emergency','pending','2023-05-12','2023-05-13','marriage',1);
+(3,13,3,3,'emergency','rejected','2023-05-12','2023-05-13','marriage',1),
+(3,13,3,4,'emergency','accepted','2023-05-15','2023-05-17','bla',-2);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
