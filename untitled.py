@@ -370,6 +370,15 @@ def manviewleave():
     res = db.select(qry)
     return render_template('manager/manviewleave.html')
 
+@app.route('/manfilterby',methods=['post'])
+def manfilterby():
+    dept=request.form['filter']
+    db=Db()
+    qry="SELECT * FROM `leave` INNER JOIN `employee` ON `leave`.`empid`=`employee`.`empid` WHERE `dept` LIKE '"+dept+"'"
+    res=db.select(qry)
+    return render_template('manager/manviewleave.html',data=res)
+
+
 @app.route('/monthreport')
 def monthreport():
     now = datetime.now()
