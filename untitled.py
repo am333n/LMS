@@ -283,19 +283,17 @@ def acceptappl2(id):
     cnx = mysql.connector.connect(host="localhost", user="root", password="", database="hr")
     cur = cnx.cursor(dictionary=True)
 
-    qry1 = "UPDATE `request` SET `leavestatus`='accepted' WHERE `requestid`=%s"
-    cur.execute(qry1, (id,))
-    cnx.commit()
+    # qry1 = "UPDATE `request` SET `leavestatus`='accepted' WHERE `requestid`=%s"
+    # cur.execute(qry1, (id,))
+    # cnx.commit()
 
     qry2 = "SELECT * FROM `request` INNER JOIN `leave`  ON `request`.`empid` = `leave`.`empid` WHERE requestid=%s AND leavestatus='pending'"
     cur.execute(qry2, (id,))
-    res2 = cur.fetchone()
-
+    res2 = cur.fetchall()
     if res2 is not None:
-        leave_id = res2['leaveid']
+        leave_id =res2['leaveid']
         days = res2['days']
         leave_type = res2['type']
-
         if leave_type == "normal":
             qry3 = "UPDATE `leave` SET `ntaken`=`ntaken`+ %s WHERE `leaveid`=%s"
         elif leave_type == "medical":

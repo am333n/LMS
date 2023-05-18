@@ -11,10 +11,10 @@
 {#<form action="/filterby" method="post" enctype="multipart/form-data">#}
 {#    {% block title %}View Leave{% endblock %}#}
 <div class="container">
-    <h2>Monthly Leave Report</h2>
+    <h2>View Leave</h2>
     <div class="card">
             <div class="card-body">
-    <form action="/report_post" method="post">
+    <form action="/filterby" method="post">
 
 <table >
     <tr>
@@ -52,9 +52,9 @@
                     <th scope="col">Photo</th>
                     <th scope="col">Employee Name</th>
                     <th scope="col">Annual Leave</th>
-                    <th scope="col">Remaining</th>
+                    <th scope="col">Taken</th>
                        <th scope="col">Medical</th>
-                      <th scope="col">Remaining</th>
+                      <th scope="col">Taken</th>
                       <th scope="col">Emergency</th>
                       <th scope="col">Remaining</th>
 {#                      <th scope="col">Reject</th>#}
